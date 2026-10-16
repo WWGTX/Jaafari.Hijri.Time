@@ -1,0 +1,71 @@
+{
+  "succeeded": true,
+  "source": "hmomen-current-web-client-compatible-local-calculation",
+  "documentedApi": {
+    "url": "https://hq.alkafeel.net/Api/init/init.php?v=jsonPrayerTimes&timezone=3&long=46.2785656&lati=31.0109644",
+    "status": 200,
+    "ok": true,
+    "responseBytes": 0,
+    "data": null,
+    "attempts": [
+      {
+        "attempt": 1,
+        "startedAt": "2026-08-28T01:03:48.020Z",
+        "status": 200,
+        "responseBytes": 0,
+        "receivedPrayerPayload": false
+      }
+    ]
+  },
+  "fallback": {
+    "method": "Jafari",
+    "date": "2026-08-28",
+    "location": {
+      "city": "الاسكان الصناعي",
+      "country": "العراق",
+      "latitude": 31.0109644,
+      "longitude": 46.2785656,
+      "timezoneHours": 3
+    },
+    "settings": {
+      "imsak": "10 min",
+      "dhuhr": "0 min",
+      "asr": "Standard",
+      "highLats": "NightMiddle",
+      "fajr": 18,
+      "isha": 14,
+      "maghrib": 4,
+      "midnight": "Jafari"
+    },
+    "times": {
+      "twentyFourHour": {
+        "imsak": "03:54",
+        "fajr": "04:04",
+        "sunrise": "05:29",
+        "dhuhr": "11:56",
+        "asr": "15:32",
+        "sunset": "18:23",
+        "maghrib": "18:38",
+        "isha": "19:27",
+        "midnight": "23:14"
+      },
+      "twelveHour": {
+        "imsak": "3:54 am",
+        "fajr": "4:04 am",
+        "sunrise": "5:29 am",
+        "dhuhr": "11:56 am",
+        "asr": "3:32 pm",
+        "sunset": "6:23 pm",
+        "maghrib": "6:38 pm",
+        "isha": "7:27 pm",
+        "midnight": "11:14 pm"
+      }
+    }
+  },
+  "retryPolicy": {
+    "retryForever": false,
+    "retries": 0,
+    "initialDelayMs": 2000
+  },
+  "note": "The documented endpoint did not provide a payload, so times were calculated locally with the current hmomen public-client parameters. This is not a direct API payload."
+}

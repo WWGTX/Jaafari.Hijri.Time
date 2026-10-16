@@ -1,0 +1,220 @@
+{
+  "name": "Haqybat Al-Momen / hmomen.com prayer-time public interfaces",
+  "generatedAt": "2026-08-28T00:39:00Z",
+  "scope": "Public endpoints and client-visible calculation configuration only. No private endpoints, session flows, or client API keys are included.",
+  "documentation": {
+    "technicalWalkthrough": "TECHNICAL_WALKTHROUGH_AR.md",
+    "lineByLineGenerator": "generate-line-by-line-doc.mjs",
+    "description": "Arabic implementation-level documentation. The generator reads the current executable script and emits a row for every source line with an explanation, as well as the data contract, retry branches, output schema, and local calculation stages."
+  },
+  "sources": [
+    {
+      "url": "https://hmomen.com/",
+      "purpose": "Current web client and location-data interface discovery"
+    },
+    {
+      "url": "https://hq.alkafeel.net/Api/index.php?model=jsonPrayerTimes",
+      "purpose": "Publicly documented JSON prayer-time interface"
+    }
+  ],
+  "documentedPrayerTimesApi": {
+    "method": "GET",
+    "url": "https://hq.alkafeel.net/Api/init/init.php",
+    "queryParameters": {
+      "v": {
+        "required": true,
+        "value": "jsonPrayerTimes",
+        "description": "Selects the JSON prayer-times response model"
+      },
+      "timezone": {
+        "required": true,
+        "example": "+3",
+        "description": "UTC offset for the target location"
+      },
+      "long": {
+        "required": true,
+        "example": "44.2594504",
+        "description": "Longitude in decimal degrees"
+      },
+      "lati": {
+        "required": true,
+        "example": "32.0218391",
+        "description": "Latitude in decimal degrees"
+      }
+    },
+    "documentedResponseFields": {
+      "fajir": "Fajr prayer time as a string",
+      "sunrise": "Sunrise time as a string",
+      "doher": "Dhuhr prayer time as a string",
+      "sunset": "Sunset time as a string",
+      "maghrib": "Maghrib prayer time as a string",
+      "date": "Hijri date string",
+      "powerdby": "Source attribution string; spelling follows the public documentation"
+    },
+    "observedInThisRun": {
+      "request": {
+        "timezone": "+3",
+        "long": "44.2594504",
+        "lati": "32.0218391"
+      },
+      "result": "The public documentation was reachable, while the live endpoint returned an empty response in this environment. This descriptor does not fabricate a current prayer-time payload."
+    }
+  },
+  "hmomenLocationApi": {
+    "baseUrl": "https://hmomen.com/api/geolocation",
+    "endpoints": [
+      {
+        "name": "listCountries",
+        "method": "GET",
+        "path": "/countries",
+        "response": {
+          "countries": [
+            {
+              "country_code": "ISO-like country code supplied by the service",
+              "country_name": "Arabic country name"
+            }
+          ]
+        }
+      },
+      {
+        "name": "listCitiesForCountry",
+        "method": "GET",
+        "path": "/countries/{countryCode}",
+        "pathParameters": {
+          "countryCode": "A code returned by listCountries, such as IQ"
+        }
+      },
+      {
+        "name": "getCity",
+        "method": "GET",
+        "path": "/city/{id}",
+        "pathParameters": {
+          "id": "Numeric city ID returned by search or country data"
+        },
+        "response": {
+          "city": "Selected city record",
+          "cites": "Related city records; spelling follows the observed response"
+        }
+      },
+      {
+        "name": "searchCities",
+        "method": "POST",
+        "path": "/search",
+        "contentType": "multipart/form-data",
+        "body": {
+          "query": "City search phrase, e.g. النجف"
+        },
+        "response": {
+          "results": "Array of city records"
+        }
+      }
+    ],
+    "cityRecordFields": {
+      "id": "Numeric location ID",
+      "city": "City name",
+      "timezone_offset": "UTC offset in milliseconds, represented as a string by the observed API",
+      "timezone_name": "Timezone label",
+      "longitude": "Longitude in decimal degrees, represented as a string",
+      "latitude": "Latitude in decimal degrees, represented as a string",
+      "country_name": "Country name",
+      "country_code": "Country code",
+      "lang": "Record language",
+      "hits": "Service-side popularity or lookup counter when present"
+    }
+  },
+  "currentWebClientCalculation": {
+    "execution": "The current hmomen.com web client calculates daily and monthly prayer times locally after obtaining city coordinates and timezone data.",
+    "timeFormat": "12h",
+    "baselineSettings": {
+      "imsak": "10 min",
+      "dhuhr": "0 min",
+      "asr": "Standard",
+      "highLats": "NightMiddle"
+    },
+    "methods": {
+      "Jafari": {
+        "label": "الشيعة الاثني عشري، معهد لوفا، قم",
+        "params": { "fajr": 18, "isha": 14, "maghrib": 4, "midnight": "Jafari" }
+      },
+      "Tehran": {
+        "label": "معهد الجيوفيزياء، جامعة طهران",
+        "params": {
+          "fajr": 17.7,
+          "isha": 14,
+          "maghrib": 4.5,
+          "midnight": "Jafari"
+        }
+      },
+      "Karachi": {
+        "label": "جامعة العلوم الإسلامية، كراتشي",
+        "params": {
+          "fajr": 18,
+          "isha": 18,
+          "maghrib": "0 min",
+          "midnight": "Standard"
+        }
+      },
+      "Makkah": {
+        "label": "جامعة أم القرى بمكة المكرمة",
+        "params": {
+          "fajr": 18.5,
+          "isha": "90 min",
+          "maghrib": "0 min",
+          "midnight": "Standard"
+        }
+      },
+      "Egypt": {
+        "label": "الهيئة العامة للمساحة المصرية",
+        "params": {
+          "fajr": 19.5,
+          "isha": 17.5,
+          "maghrib": "0 min",
+          "midnight": "Standard"
+        }
+      },
+      "ISNA": {
+        "label": "الجمعية الإسلامية لأمريكا الشمالية (إسنا)",
+        "params": {
+          "fajr": 15,
+          "isha": 15,
+          "maghrib": "0 min",
+          "midnight": "Standard"
+        }
+      },
+      "MWL": {
+        "label": "رابطة العالم الإسلامي",
+        "params": {
+          "fajr": 18,
+          "isha": 17,
+          "maghrib": "0 min",
+          "midnight": "Standard"
+        }
+      }
+    },
+    "timeFields": [
+      "imsak",
+      "fajr",
+      "sunrise",
+      "dhuhr",
+      "asr",
+      "sunset",
+      "maghrib",
+      "isha",
+      "midnight"
+    ]
+  },
+  "usageNotes": [
+    "Use the location API to resolve publicly available coordinates and timezone information.",
+    "Use the documented prayer-times endpoint only under its published terms and acknowledge its source.",
+    "The client-visible location API is not a published guarantee of service stability; handle HTTP errors and schema changes.",
+    "Do not rely on or redistribute any client-side key observed in web assets."
+  ],
+  "retryPolicyImplementedInScript": {
+    "defaultRetries": 3,
+    "defaultInitialDelayMs": 2000,
+    "strategy": "Exponential backoff with a small random jitter and a maximum delay of 120000 ms.",
+    "successCondition": "The response is successful and contains at least one non-empty documented prayer-time field.",
+    "longRunningMode": "Pass --retry-forever --no-fallback when running the script on a computer that remains online and you need to wait exclusively for a payload from the documented endpoint. Pass --output <path> to persist the resulting JSON.",
+    "fallback": "Unless --no-fallback is passed, the script returns a clearly labelled local calculation using the publicly observed current hmomen web-client calculation configuration after the documented API remains empty."
+  }
+}
